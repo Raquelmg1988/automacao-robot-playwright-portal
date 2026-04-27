@@ -1,0 +1,75 @@
+# =========================
+# Ambiente Python
+# =========================
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+# =========================
+# Java / JDK (NÃO versionar)
+# =========================
+tools/OpenJDK*/
+tools/jdk*/
+
+# =========================
+# Allure (binários locais)
+# =========================
+tools/allure/
+
+# =========================
+# Robot Framework outputs
+# =========================
+output.xml
+log.html
+report.html
+output/
+
+# =========================
+# Playwright / Browser
+# =========================
+browser/
+playwright/
+playwright-log.txt
+
+# =========================
+# Resultados e evidências
+# =========================
+results/
+allure-results/
+allure-report/
+
+# =========================
+# Evidências (prints e vídeos)
+# =========================
+*.png
+*.webm
+
+# =========================
+# Dados sensíveis
+# =========================
+resources/variables_local.robot
+
+# =========================
+# Node (usado pelo Browser Library)
+# =========================
+node_modules/
+package-lock.json
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+
+# =========================
+# Sistema Operacional
+# =========================
+.DS_Store
+Thumbs.db

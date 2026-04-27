@@ -1,0 +1,15 @@
+robotframework==7.0
+robotframework-browser==18.3.0
+allure-robotframework==2.13.5
+
+# Requests (Teams)
+robotframework-requests==0.9.7
+
+# Core
+robotframework-pythonlibcore==4.4.1
+
+# Debug
+robotframework-stacktrace==0.4.1
+
+# Playwright fixo 
+playwright==1.44.0
