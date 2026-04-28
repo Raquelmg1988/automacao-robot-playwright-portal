@@ -2,9 +2,9 @@
 ${URL}    https://hml.portaldocliente.grupoelfa.com.br/
 
 # LOGIN
-${EMAIL_FUNCIONARIO}   raquel.goncalves@grupoelfa.com.br
-${EMAIL_CLIENTE}       raquelmg88@gmail.com
-${SENHA_CLIENTE}       Alicearthurbruce@4
+${EMAIL_FUNCIONARIO}   %{EMAIL_FUNCIONARIO}
+${EMAIL_CLIENTE}       %{EMAIL_CLIENTE}
+${SENHA_CLIENTE}       %{SENHA_CLIENTE}
 
 # ESTA LINHA É A CHAVE:
 # Localmente, se o arquivo não existir, ele ignora. 
