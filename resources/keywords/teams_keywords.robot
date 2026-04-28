@@ -24,15 +24,29 @@ Enviar Resultado Para Teams
 
     ${data}=     Get Current Date    result_format=%d/%m/%Y %H:%M:%S
 
-    ${mensagem}=    Set Variable
-    ...    🚀 Execução de Testes Automatizados - Portal do Cliente\n
-    ...    📅 Data: ${data}\n
-    ...    🧪 Total: ${tests}\n
-    ...    ✅ Sucesso: ${passed}\n
-    ...    ❌ Falhas: ${failed}\n
-    ...    🔎 Status Final: ${resultado}
+    ${card}=    Create Dictionary
+    ...    type=AdaptiveCard
+    ...    version=1.4
+    ...    msteams=Create Dictionary    width=Full
+    ...    body=Create List
+    ...    actions=Create List
 
-    ${body}=     Create Dictionary    text=${mensagem}
+    ${body}=    Create List
+    ...    Create Dictionary    type=TextBlock    size=Large    weight=Bolder    text=🚀 Execução de Testes Automatizados - Portal do Cliente
+    ...    Create Dictionary    type=TextBlock    text=📅 Data: ${data}
+    ...    Create Dictionary    type=TextBlock    text=🧪 Total: ${tests}
+    ...    Create Dictionary    type=TextBlock    text=✅ Sucesso: ${passed}
+    ...    Create Dictionary    type=TextBlock    text=❌ Falhas: ${failed}
+    ...    Create Dictionary    type=TextBlock    text=🔎 Status Final: ${resultado}
+
+    Set To Dictionary    ${card}    body    ${body}
+
+    ${actions}=    Create List
+    ...    Create Dictionary    type=Action.OpenUrl    title=Ver Relatório    url=https://<URL_DO_SEU_RELATORIO>
+    Set To Dictionary    ${card}    actions    ${actions}
+
+    ${payload}=    Create Dictionary    type=message    attachments=Create List    Create Dictionary    contentType=application/vnd.microsoft.card.adaptive    content=${card}
+
     ${headers}=  Create Dictionary    Content-Type=application/json
 
     Create Session    teams    ${TEAMS_WEBHOOK}    verify=False
@@ -40,7 +54,7 @@ Enviar Resultado Para Teams
     ${response}=    POST On Session
     ...    teams
     ...    /
-    ...    json=${body}
+    ...    json=${payload}
     ...    headers=${headers}
     ...    expected_status=any
 
