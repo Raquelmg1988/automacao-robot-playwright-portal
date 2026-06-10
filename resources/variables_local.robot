@@ -1,19 +1,17 @@
 *** Variables ***
-${URL}    https://hml.portaldocliente.grupoelfa.com.br/
 
-# LOGIN
-${EMAIL_FUNCIONARIO}   %{EMAIL_FUNCIONARIO}
-${EMAIL_CLIENTE}       %{EMAIL_CLIENTE}
-${SENHA_CLIENTE}       %{SENHA_CLIENTE}
+${BASE_URL}    https://hml.portaldocliente.grupoelfa.com.br
 
-# ESTA LINHA É A CHAVE:
-# Localmente, se o arquivo não existir, ele ignora. 
-# Na Pipeline, o comando "-v AUTH_STATE_JSON:$AUTH_STATE_JSON_PATH" vai preencher este valor.
-${AUTH_STATE_JSON}          auth_state.json
+${URL}             ${BASE_URL}/
+${URL_PEDIDOS}     ${BASE_URL}/pedidos
 
-# TIMEOUTS
-${MFA_TIMEOUT}         60s
-${HOME_TIMEOUT}        30s
+${AUTH_STATE_JSON}    ${CURDIR}/../auth_state.json
 
-# MENSAGENS
-${MSG_EMAIL_EXISTENTE}    E-mail já cadastrado
+# LOGIN FIXO
+${EMAIL_CLIENTE}    raquelmg88@gmail.com
+${SENHA_CLIENTE}    Alicearthurbruce@4
+
+# CADASTRO
+${CELULAR_TESTE}      (21) 99999-9999
+${CNPJ_EXISTENTE}     00.508.745/0001-66
+${SENHA_TESTE}        Teste@123

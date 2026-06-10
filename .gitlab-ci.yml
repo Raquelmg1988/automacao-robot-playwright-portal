@@ -1,35 +1,40 @@
 stages:
   - test
 
-variables:
-  # O GitLab salvará o conteúdo do arquivo de sessão em um arquivo temporário e passará o caminho para cá
-  AUTH_STATE_JSON_PATH: $AUTH_STATE_JSON 
-
 robot_tests:
   stage: test
-  # Imagem com TODAS as dependências de navegador já instaladas
-  image: mcr.microsoft.com/playwright:v1.44.0-jammy
+
+  image: mcr.microsoft.com/playwright:v1.59.1-jammy
 
   before_script:
-    - apt-get update && apt-get install -y python3-pip
+    - apt-get update
+    - apt-get install -y python3-pip unzip openjdk-11-jre
+
     - pip install -r requirements.txt
+
     - rfbrowser init
 
+    # cria pastas necessárias
+    - mkdir -p results
+    - mkdir -p allure-results
+
+    # auth state (seguro)
+    - cp "$AUTH_STATE_JSON" auth_state.json || true
+
   script:
-    # Passamos o caminho do arquivo de sessão para a variável do Robot
-    - robot -v AUTH_STATE_JSON:$AUTH_STATE_JSON_PATH --listener allure_robotframework:results/allure-results -d results --exclude manual tests
-    
-    # Gera o relatório Allure (opcional, se você tiver o binário do allure no path ou via pip)
-    # Se não tiver o binário do Allure na imagem, você pode apenas subir os resultados
-    # - allure generate results/allure-results -o results/allure-report --clean
+    # execução Robot + output padrão
+    - robot -d results tests
+
+    # converte output.xml para allure
+    - allure generate results -o allure-report --clean || true
+
+  after_script:
+    - rm -f auth_state.json || true
 
   artifacts:
     when: always
+    expire_in: 7 days
     paths:
       - results/
-      - results/allure-results/
-    expire_in: 1 week
-
-  cache:
-    paths:
-      - .cache/pip
+      - allure-results/
+      - allure-report/
