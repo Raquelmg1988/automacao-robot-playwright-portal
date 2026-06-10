@@ -9,13 +9,13 @@ __pycache__/
 .env
 
 # =========================
-# Java / JDK (NÃO versionar)
+# Java / JDK (NAO versionar)
 # =========================
 tools/OpenJDK*/
 tools/jdk*/
 
 # =========================
-# Allure (binários locais)
+# Allure (binarios locais)
 # =========================
 tools/allure/
 
@@ -35,21 +35,22 @@ playwright/
 playwright-log.txt
 
 # =========================
-# Resultados e evidências
+# Resultados e evidencias
 # =========================
 results/
 allure-results/
 allure-report/
 
 # =========================
-# Evidências (prints e vídeos)
+# Evidencias (prints e videos)
 # =========================
 *.png
 *.webm
 
 # =========================
-# Dados sensíveis
+# Dados sensiveis (NUNCA versionar)
 # =========================
+auth_state.json
 resources/variables_local.robot
 
 # =========================

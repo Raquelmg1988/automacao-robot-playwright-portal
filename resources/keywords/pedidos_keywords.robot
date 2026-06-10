@@ -1,58 +1,156 @@
 *** Settings ***
 Library     Browser
-Library     OperatingSystem
-Library     Collections
+
+Resource    ../variables_local.robot
 Resource    ../locators/locators.robot
-Resource    login_cliente_keywords.robot
 Resource    common_keywords.robot
+Resource    login_cliente_keywords.robot
+
 
 *** Keywords ***
 
 Ir Para Pedidos
-    Wait For Load State    networkidle
-    Wait For Elements State    ${MENU_PEDIDOS}    visible    30s
+
+    Aguardar UI Livre
+
+    Wait For Elements State
+    ...    ${MENU_PEDIDOS}
+    ...    visible
+    ...    30s
+
+    ${url_antes}=    Get Url
+    Log To Console    URL antes: ${url_antes}
+
     Click    ${MENU_PEDIDOS}
-    Wait For Elements State    ${PEDIDO_ROW}    visible    30s
+
+    Wait For Elements State
+    ...    ${PEDIDO_ROWS}
+    ...    visible
+    ...    30s
+
+    ${url_depois}=    Get Url
+    Log To Console    URL depois: ${url_depois}
+
+
+Validar Tabela Carregada
+
+    Wait For Elements State
+    ...    ${PEDIDO_ROWS}
+    ...    visible
+    ...    30s
+
+    ${rows}=    Get Element Count    ${PEDIDO_ROWS}
+
+    Log To Console    Total linhas encontradas: ${rows}
+
+    IF    ${rows} > 0
+        Log To Console    ✅ Tabela carregada com pedidos
+        RETURN
+    END
+
+    ${body}=    Get Text    body
+
+    IF    "Nenhum pedido disponível" in """${body}"""
+        Log To Console    ✅ Filtro sem resultados — comportamento esperado
+        RETURN
+    END
+
+    Take Screenshot
+    Fail    ❌ Falha ao carregar pedidos
+
+
+Validar Lista Pedidos
+
+    Validar Tabela Carregada
+
+    ${rows}=    Get Element Count    ${PEDIDO_ROWS}
+
+    IF    ${rows} == 0
+        Log To Console    ⚠️ Sem pedidos para o filtro aplicado
+        RETURN
+    END
+
+    Log To Console    ✅ ${rows} pedidos encontrados
+
+
+Abrir Primeiro Pedido
+
+    Validar Lista Pedidos
+
+    ${row}=    Get Element
+    ...    css=tbody tr >> nth=0
+
+    Wait For Elements State
+    ...    ${row}
+    ...    visible
+    ...    30s
+
+    Click    ${row} >> button
+
+
+Validar Detalhes do Pedido
+
+    Wait For Elements State
+    ...    ${DETALHE_PEDIDO_TITULO}
+    ...    visible
+    ...    30s
+
+    Wait For Elements State
+    ...    ${DETALHE_NOTA_FISCAL}
+    ...    visible
+    ...    30s
+
+
+Validar Tela Detalhes
+
+    ${url}=    Get Url
+    Log To Console    URL detalhes: ${url}
+
+    ${body}=    Get Text    main
+
+    Should Contain    ${body}    Pedido
+    Should Contain    ${body}    Nota fiscal
+
 
 Filtrar Por Status
     [Arguments]    ${status}
+
+    Aguardar UI Livre
+    Scroll To Top
+
+    Wait For Elements State
+    ...    ${FILTRO_STATUS}
+    ...    visible
+    ...    30s
+
     Click    ${FILTRO_STATUS}
-    # O "exact=True" garante que ele clique apenas em "Faturado" e ignore o "Não Faturado"
-    Click    text="${status}"
-    Log    Filtro por status aplicado: ${status}
+
+    Click    role=option[name="${status}"]
+
+    Wait For Elements State
+    ...    ${PEDIDO_ROWS}
+    ...    visible
+    ...    30s
+
+
+Validar Status Na Tabela
+    [Arguments]    ${status}
+
+    ${texto}=    Get Text    ${PEDIDO_ROWS}
+
+    Log To Console    ${texto}
+
+    Should Contain    ${texto}    ${status}
+
 
 Filtrar Por Periodo
     [Arguments]    ${periodo}
-    Click    ${FILTRO_PERIODO}
-    Click    text=${periodo}
-    Log    Filtro por período aplicado: ${periodo}
 
-Validar Lista Pedidos
-    Wait For Elements State    ${PEDIDO_ROW}    visible    10s
-    ${count}=    Get Element Count    ${PEDIDO_ROW}
-    Run Keyword If    ${count} == 0    Fail    ❌ Nenhum pedido encontrado
-    Log    Lista de pedidos carregada com ${count} itens
+    Aguardar UI Livre
 
-Abrir Primeiro Pedido
-    # Força o clique na primeira célula da primeira linha para garantir a ação
-    Click    ${PEDIDO_ROW} >> td >> nth=0
-    # Aguarda o título da página de detalhes ou um elemento fixo
-    Wait For Elements State    xpath=//h1[contains(., "Pedido")]    visible    30s
-    Wait For Load State    networkidle
+    Click    role=button[name="${periodo}"]
 
-Baixar Nota Fiscal Primeiro Pedido
-    Click    ${PEDIDO_ROW} >> nth=0 >> xpath=//button[contains(@class,"menu")]
-    Wait For Elements State    ${BTN_NF_PDF}    visible    5s
-    Click    ${BTN_NF_PDF}
-
-Validar Boleto Primeiro Pedido
-    Click    ${PEDIDO_ROW} >> nth=0 >> xpath=//button[contains(@class,"menu")]
-    Wait For Elements State    ${BTN_BOLETO}    visible    5s
-
-Validar Comprovante Primeiro Pedido
-    Click    ${PEDIDO_ROW} >> nth=0 >> xpath=//button[contains(@class,"menu")]
-    Wait For Elements State    ${BTN_COMPROVANTE}    visible    5s
-
-Validar Detalhes do Pedido
-    Wait For Elements State    text=Resumo do Pedido    visible    10s
-    Wait For Elements State    text=Nota fiscal    visible    10s
+    Wait For Elements State
+    ...    ${PEDIDO_ROWS}
+    ...    visible
+    ...    30s
