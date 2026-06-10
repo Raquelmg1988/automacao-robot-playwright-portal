@@ -147,5 +147,11 @@ Gerar Email Aleatorio
 
 
 Gerar CNPJ Aleatorio
-    ${rand}=    Generate Random String    8    [NUMBERS]
-    RETURN    ${rand}0001
+    # CNPJs fictícios com dígitos verificadores válidos para uso em testes
+    @{cnpjs}=    Create List
+    ...    11.222.333/0001-81
+    ...    34.528.760/0001-09
+    ...    45.990.175/0001-08
+    ...    56.871.080/0001-53
+    ${index}=    Evaluate    random.randint(0, 3)    modules=random
+    RETURN    ${cnpjs}[${index}]

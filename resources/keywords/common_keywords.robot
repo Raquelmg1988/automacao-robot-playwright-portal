@@ -1,7 +1,18 @@
 *** Settings ***
 Library    Browser
+Resource   teams_keywords.robot
 
 *** Keywords ***
+
+Finalizar Suite
+
+    Run Keyword And Ignore Error
+    ...    Enviar Resultado Para Teams    ${SUITE STATUS}
+
+    Run Keyword And Ignore Error
+    ...    Close Browser
+
+
 
 Fechar Modal Comunicado Se Existir
 

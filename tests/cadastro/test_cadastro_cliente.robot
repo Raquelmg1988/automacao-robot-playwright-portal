@@ -1,10 +1,10 @@
 *** Settings ***
 Library     Browser
-Resource    ../resources/variables_local.robot
-Resource    ../resources/keywords/login_cliente_keywords.robot
-Resource    ../resources/keywords/cadastro_cliente_keywords.robot
-Resource    ../resources/keywords/evidencias_keywords.robot
-Resource    ../resources/keywords/common_keywords.robot
+Resource    ../../resources/variables_local.robot
+Resource    ../../resources/keywords/login_cliente_keywords.robot
+Resource    ../../resources/keywords/cadastro_cliente_keywords.robot
+Resource    ../../resources/keywords/evidencias_keywords.robot
+Resource    ../../resources/keywords/common_keywords.robot
 
 
 Suite Setup    Abrir Sessao Logada
@@ -38,7 +38,7 @@ Validar Email Ja Cadastrado
     [Documentation]    Valida o bloqueio de cadastro com e-mail já existente no sistema
     Ir Para Tela Cadastro
     Preencher Dados Usuario    Raquel    Goncalves    21999999999    raquelmg88@gmail.com    Teste@123
-    Wait For Elements State    ${MSG_EMAIL_EXISTENTE_LOCATOR}    visible    30s
+    Wait For Elements State    ${MSG_EMAIL_EXISTENTE}    visible    30s
 
 Validar Campos Obrigatorios
     [Documentation]    Valida as mensagens de erro ao tentar prosseguir com campos vazios

@@ -1,43 +1,17 @@
 *** Settings ***
 Library    Browser
 
-Resource   ../../resources/keywords/pedidos_keywords.robot
+Resource    ../../resources/variables_local.robot
+Resource    ../../resources/keywords/login_cliente_keywords.robot
+Resource    ../../resources/keywords/evidencias_keywords.robot
 
-Suite Setup       Abrir Sessao Logada
-Suite Teardown    Close Browser
+Test Teardown    Capturar Evidencia Se Falhar
 
 
 *** Test Cases ***
 
-Abrir Primeiro Pedido
+Validar Login Com Sessao Salva
 
-    ${body}=    Get Text    body
+    Abrir Sessao Logada
 
-    Log To Console
-    ...    ${body}
-
-
-
-Validar Pedidos
-
-    Ir Para Pedidos
-
-    Validar Lista Pedidos
-
-
-Validar Filtros de Pedidos
-
-    Ir Para Pedidos
-
-    Filtrar Por Status    Faturado
-
-    Validar Lista Pedidos
-
-
-Validar Detalhes Pedido
-
-    Ir Para Pedidos
-
-    Abrir Primeiro Pedido
-
-    Validar Detalhes do Pedido
+    Usuario Esta Logado

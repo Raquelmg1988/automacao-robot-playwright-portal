@@ -34,7 +34,7 @@ ${OPCAO_NAO_FATURADO}
 ...    role=option[name="Não Faturado"]
 
 ${OPCAO_CANCELADO}
-...    role=option[name=Cancelado"]
+...    role=option[name="Cancelado"]
 
 # =========================
 # PERIODO
@@ -80,4 +80,65 @@ ${MSG_EMAIL_EXISTENTE}
 
 ${MSG_CNPJ_EXISTENTE}
 ...    xpath=//*[contains(text(),'já possui')]
+
+# =========================
+# FORMULÁRIO DE CADASTRO - ETAPA 1
+# =========================
+
+${INPUT_NOME}
+...    css=input[placeholder="Informe seu nome"]
+
+${INPUT_SOBRENOME}
+...    css=input[placeholder="Seu sobrenome"]
+
+${INPUT_CELULAR}
+...    css=input[placeholder="Seu celular"]
+
+${INPUT_SENHA_CADASTRO}
+...    css=input[type="password"] >> nth=0
+
+${INPUT_CONFIRMAR_SENHA}
+...    css=input[name="passwordConfirmation.confirmPassword"]
+
+${BTN_CONTINUAR}
+...    text=Continuar
+
+${MARCAR_LGPD}
+...    xpath=//span[contains(text(), "Estou ciente")]
+
+# =========================
+# FORMULÁRIO DE CADASTRO - ETAPA 2
+# =========================
+
+${INPUT_CNPJ}
+...    css=input[placeholder="00.000.000/0000-00"]
+
+# =========================
+# MFA
+# =========================
+
+${MFA_INPUT}
+...    css=input[type="text"]
+
+# =========================
+# VALIDAÇÃO DE SENHA
+# =========================
+
+${MSG_CAMPO_OBRIGATORIO}
+...    css=.text-destructive >> nth=0
+
+${REGRA_SENHA_MIN}
+...    text=Mínimo de 8 caracteres
+
+${REGRA_SENHA_MINUSCULA}
+...    text=Uma letra minúscula
+
+${REGRA_SENHA_MAIUSCULA}
+...    text=Uma letra maiúscula
+
+${REGRA_SENHA_NUMERO}
+...    text=Um número
+
+${REGRA_SENHA_ESPECIAL}
+...    text=Um caractere especial
 
