@@ -14,22 +14,18 @@ robot_tests:
 
     - rfbrowser init
 
-    # cria pastas necessárias
     - mkdir -p results
     - mkdir -p allure-results
 
-    # auth state (seguro)
-    - cp "$AUTH_STATE_JSON" auth_state.json || true
+    - cp "$AUTH_STATE_JSON" auth_state.json
 
   script:
-    # execução Robot + output padrão
-    - robot -d results tests
+    - robot --listener allure_robotframework:allure-results -d results portal_laudos_estrutura/tests/laudos/test_laudos.robot || true
 
-    # converte output.xml para allure
-    - allure generate results -o allure-report --clean || true
+    - allure generate allure-results -o allure-report --clean
 
   after_script:
-    - rm -f auth_state.json || true
+    - rm -f auth_state.json
 
   artifacts:
     when: always
