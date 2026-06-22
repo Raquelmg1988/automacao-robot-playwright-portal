@@ -6,16 +6,22 @@ Library    Collections
 *** Keywords ***
 
 Capturar Evidencia
-    Create Directory    results/screenshots
-    Take Screenshot
+    # Ajustado com ${EXECDIR} para salvar na raiz correta do projeto
+    Create Directory    ${EXECDIR}/results/screenshots
+    Take Screenshot     filename=${EXECDIR}/results/screenshots/{index}-{test_name}
     Log    Screenshot capturado
 
 Capturar Video
-    ${videos}=    List Files In Directory    results/videos
-
-    FOR    ${video}    IN    @{videos}
-        Log    Video gerado: ${video}
+    # Verifica se a pasta existe antes de listar, evitando erros se não houver vídeos
+    ${pasta_existe}=    Run Keyword And Return Status    Directory Should Exist    ${EXECDIR}/results/videos
+    
+    IF    ${pasta_existe}
+        ${videos} =    List Files In Directory    ${EXECDIR}/results/videos
+        FOR    ${video}    IN    @{videos}
+            Log    Video gerado: ${video}
+        END
     END
+
 
 Capturar Evidencia Completa
     Capturar Evidencia

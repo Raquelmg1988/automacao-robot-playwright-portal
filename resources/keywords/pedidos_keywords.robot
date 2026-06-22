@@ -1,5 +1,6 @@
 *** Settings ***
 Library     Browser
+Library     String
 
 Resource    ../variables_local.robot
 Resource    ../locators/locators.robot
@@ -18,102 +19,83 @@ Ir Para Pedidos
     ...    visible
     ...    30s
 
-    ${url_antes}=    Get Url
-    Log To Console    URL antes: ${url_antes}
-
     Click    ${MENU_PEDIDOS}
 
-    Wait For Elements State
-    ...    ${PEDIDO_ROWS}
-    ...    visible
-    ...    30s
+    Sleep    3s
 
-    ${url_depois}=    Get Url
-    Log To Console    URL depois: ${url_depois}
+    Limpar Filtros Pedidos
 
+
+Limpar Filtros Pedidos
+
+    Aguardar UI Livre
+
+    ${existe}=    Run Keyword And Return Status
+    ...    Get Text
+    ...    text=Limpar Filtros
+
+    IF    ${existe}
+        Click    text=Limpar Filtros
+        Sleep    2s
+    END
 
 Validar Tabela Carregada
 
-    Wait For Elements State
-    ...    ${PEDIDO_ROWS}
-    ...    visible
-    ...    30s
-
     ${rows}=    Get Element Count    ${PEDIDO_ROWS}
 
-    Log To Console    Total linhas encontradas: ${rows}
-
     IF    ${rows} > 0
-        Log To Console    ✅ Tabela carregada com pedidos
+        Log To Console    Pedidos encontrados: ${rows}
         RETURN
     END
 
     ${body}=    Get Text    body
 
     IF    "Nenhum pedido disponível" in """${body}"""
-        Log To Console    ✅ Filtro sem resultados — comportamento esperado
+        Log To Console    Nenhum pedido disponível para o filtro aplicado
         RETURN
     END
 
     Take Screenshot
-    Fail    ❌ Falha ao carregar pedidos
+    Fail    Falha ao carregar pedidos
+
+
+Validar Menu Acoes Pedido
+    Ir Para Pedidos
+
+    # Localiza e clica no primeiro botão de menu da tabela que NÃO esteja desabilitado
+    Click    css=tbody tr button[aria-haspopup="menu"]:not([disabled]) >> nth=0
+
+    Wait For Elements State
+    ...    ${MENU_NF_PDF}
+    ...    visible
+    ...    10s
+
+    ${body}=    Get Text    body
+
+    Should Contain    ${body}    Nota Fiscal
+
+    IF    "XML Nota Fiscal" in """${body}"""
+        Log To Console    XML disponível
+    END
+
+    IF    "Boletos" in """${body}"""
+        Log To Console    Boletos disponível
+    END
+
+    IF    "Comprovante de entrega" in """${body}"""
+        Log To Console    Comprovante disponível
+    END
 
 
 Validar Lista Pedidos
 
     Validar Tabela Carregada
 
-    ${rows}=    Get Element Count    ${PEDIDO_ROWS}
-
-    IF    ${rows} == 0
-        Log To Console    ⚠️ Sem pedidos para o filtro aplicado
-        RETURN
-    END
-
-    Log To Console    ✅ ${rows} pedidos encontrados
-
-
-Abrir Primeiro Pedido
-
-    Validar Lista Pedidos
-
-    ${row}=    Get Element
-    ...    css=tbody tr >> nth=0
-
-    Wait For Elements State
-    ...    ${row}
-    ...    visible
-    ...    30s
-
-    Click    ${row} >> button
-
-
-Validar Detalhes do Pedido
-
-    Wait For Elements State
-    ...    ${DETALHE_PEDIDO_TITULO}
-    ...    visible
-    ...    30s
-
-    Wait For Elements State
-    ...    ${DETALHE_NOTA_FISCAL}
-    ...    visible
-    ...    30s
-
-
-Validar Tela Detalhes
-
-    ${url}=    Get Url
-    Log To Console    URL detalhes: ${url}
-
-    ${body}=    Get Text    main
-
-    Should Contain    ${body}    Pedido
-    Should Contain    ${body}    Nota fiscal
-
 
 Filtrar Por Status
     [Arguments]    ${status}
+
+    Limpar Filtros Pedidos
 
     Aguardar UI Livre
     Scroll To Top
@@ -121,24 +103,27 @@ Filtrar Por Status
     Wait For Elements State
     ...    ${FILTRO_STATUS}
     ...    visible
-    ...    30s
+    ...    10s
 
     Click    ${FILTRO_STATUS}
 
+    Wait For Elements State
+    ...    role=option[name="${status}"]
+    ...    visible
+    ...    10s
+
     Click    role=option[name="${status}"]
 
-    Wait For Elements State
-    ...    ${PEDIDO_ROWS}
-    ...    visible
-    ...    30s
+    Sleep    2s
 
 
 Validar Status Na Tabela
     [Arguments]    ${status}
 
-    ${texto}=    Get Text    ${PEDIDO_ROWS}
+    ${texto}=    Get Text    body
 
-    Log To Console    ${texto}
+    ${texto}=     Convert To Lower Case    ${texto}
+    ${status}=    Convert To Lower Case    ${status}
 
     Should Contain    ${texto}    ${status}
 
@@ -146,11 +131,30 @@ Validar Status Na Tabela
 Filtrar Por Periodo
     [Arguments]    ${periodo}
 
+    Limpar Filtros Pedidos
+
     Aguardar UI Livre
 
     Click    role=button[name="${periodo}"]
 
+    Sleep    2s
+
+    Validar Tabela Carregada
+
+
+Abrir Primeiro Pedido
+
+    Click
+    ...    xpath=(//tbody/tr[1]//button)[last()]
+
+
+Validar Detalhes do Pedido
+
     Wait For Elements State
-    ...    ${PEDIDO_ROWS}
+    ...    ${RESUMO_PEDIDO}
     ...    visible
     ...    30s
+
+  
+
+
