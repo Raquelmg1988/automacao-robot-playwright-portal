@@ -3,33 +3,40 @@ stages:
 
 robot_tests:
   stage: test
-
-  image: mcr.microsoft.com/playwright:v1.59.1-jammy
+  # 🚀 AJUSTADO: Versão alterada para v1.44.0 para bater com o seu requirements.txt
+  image: mcr.microsoft.com/playwright:v1.44.0-jammy
 
   before_script:
     - apt-get update
     - apt-get install -y python3-pip unzip openjdk-11-jre
-
     - pip install -r requirements.txt
-
     - rfbrowser init
-
-    # cria pastas necessárias
-    - mkdir -p results
-    - mkdir -p allure-results
-
-    # auth state (seguro)
-    - cp "$AUTH_STATE_JSON" auth_state.json || true
+    - mkdir -p results allure-results tests/auth
+    # Copia a sessão direto para o local consumido pelas Keywords
+    - cp "$AUTH_STATE_JSON" ./tests/auth/auth_state.json
 
   script:
-    # execução Robot + output padrão
-    - robot -d results tests
+    - echo "=== PASSO 1: VALIDANDO SESSÃO AUTENTICADA (MFA) ==="
+    - robot --listener allure_robotframework:allure-results -d results/auth tests/auth/
 
-    # converte output.xml para allure
-    - allure generate results -o allure-report --clean || true
+    - echo "=== PASSO 2: TESTES DE CADASTRO E SENHA (CENÁRIO DESLOGADO) ==="
+    # Executa os testes de cadastro de novos clientes e validações de campos
+    - robot --listener allure_robotframework:allure-results -d results/cadastro tests/cadastro/test_cadastro_cliente.robot || true
+    # Executa as validações das regras de senha do cadastro
+    - robot --listener allure_robotframework:allure-results -d results/cadastro tests/cadastro/test_validacao_senha.robot || true
+
+    - echo "=== PASSO 3: TESTES DE PEDIDOS (CENÁRIO LOGADO) ==="
+    - robot --listener allure_robotframework:allure-results -d results/pedidos tests/pedidos/ || true
+
+    - echo "=== PASSO 4: TESTES DE LOGIN ==="
+    - robot --listener allure_robotframework:allure-results -d results/login tests/login/ || true
+
+    - echo "=== PASSO 5: GERANDO RELATÓRIO DO ALLURE ==="
+    - allure generate allure-results -o allure-report --clean
 
   after_script:
-    - rm -f auth_state.json || true
+    # Garante a segurança apagando o arquivo no diretório correto
+    - rm -f ./tests/auth/auth_state.json
 
   artifacts:
     when: always

@@ -3,6 +3,10 @@ Library    Browser
 
 *** Keywords ***
 
+Finalizar Suite
+    Run Keyword And Ignore Error
+    ...    Close Browser
+
 Fechar Modal Comunicado Se Existir
 
     ${existe}=

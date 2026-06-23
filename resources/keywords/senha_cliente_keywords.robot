@@ -12,25 +12,29 @@ Testar Senha Invalida
 
     Ir Para Tela Cadastro
 
-    Fill Text
-    ...    ${INPUT_SENHA_CADASTRO}
-    ...    ${senha}
-
-    ${botao_habilitado}=
-    ...    Run Keyword And Return Status
-    ...    Wait For Elements State
-    ...    ${BTN_CONTINUAR}
-    ...    enabled
-    ...    5s
-
-    IF    ${botao_habilitado}
-        Click    ${BTN_CONTINUAR}
+    Clear Text    ${INPUT_SENHA_CADASTRO}
+    
+    IF    "${senha}" != "${EMPTY}"
+        Fill Text     ${INPUT_SENHA_CADASTRO}    ${senha}
     END
 
-    Wait For Elements State
-    ...    ${MSG_CAMPO_OBRIGATORIO}
-    ...    visible
-    ...    10s
+    Press Keys    ${INPUT_SENHA_CADASTRO}    Tab
+
+    IF    "${senha}" == "${EMPTY}"
+        Click    ${BTN_CONTINUAR}
+        Wait For Elements State    ${MSG_CAMPO_OBRIGATORIO}    visible    5s
+    ELSE
+        ${status_botao}=    Get Element States    ${BTN_CONTINUAR}
+        
+        IF    "enabled" in ${status_botao}
+            Click    ${BTN_CONTINUAR}
+            
+            Wait For Elements State    css=.text-destructive    visible    5s
+        ELSE
+            
+            Log To Console    Sucesso: Botão Continuar permaneceu desabilitado para a senha: ${senha}
+        END
+    END
 
 
 Validar Regra MinimoCaracteres

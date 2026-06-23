@@ -5,7 +5,9 @@ ${BASE_URL}    https://hml.portaldocliente.grupoelfa.com.br
 ${URL}             ${BASE_URL}/
 ${URL_PEDIDOS}     ${BASE_URL}/pedidos
 
-${AUTH_STATE_JSON}    ${CURDIR}/../auth_state.json
+# Substitua a linha antiga por esta:
+${AUTH_STATE_JSON}    ${EXECDIR}/auth_state.json
+
 
 # LOGIN FIXO
 ${EMAIL_CLIENTE}    raquelmg88@gmail.com

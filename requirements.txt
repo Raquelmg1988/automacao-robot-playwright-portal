@@ -10,3 +10,6 @@ robotframework-stacktrace==0.4.1
 
 # Playwright
 playwright==1.44.0
+
+# Dados Fake
+faker==40.23.0

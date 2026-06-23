@@ -1,14 +1,19 @@
 *** Settings ***
 Library     Browser
 
-Resource    ../resources/variables_local.robot
-Resource    ../resources/locators/locators.robot
-Resource    ../resources/keywords/login_cliente_keywords.robot
-Resource    ../resources/keywords/evidencias_keywords.robot
-Resource    ../resources/keywords/cadastro_cliente_keywords.robot
-Resource    ../resources/keywords/senha_cliente_keywords.robot
+Resource    ../../resources/variables_local.robot
+Resource    ../../resources/locators/locators.robot
+Resource    ../../resources/keywords/login_cliente_keywords.robot
+Resource    ../../resources/keywords/evidencias_keywords.robot
+Resource    ../../resources/keywords/cadastro_cliente_keywords.robot
+Resource    ../../resources/keywords/senha_cliente_keywords.robot
 
+# Abre o navegador e cria a página onde o teste vai acontecer
+Suite Setup      Run Keywords    New Browser    browser=chromium    headless=True
+...              AND             New Page       ${URL}
+Suite Teardown   Close Browser
 Test Teardown    Capturar Evidencia Se Falhar
+
 
 *** Test Cases ***
 

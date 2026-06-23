@@ -11,18 +11,21 @@ Resource    common_keywords.robot
 Fazer Login Cliente
     Abrir Sessao Logada
 
-
 Abrir Sessao Logada
 
-    New Browser    chromium    headless=False
+    Set Browser Timeout    30s
+
+    New Browser    chromium    headless=True
 
     New Context
     ...    storageState=${AUTH_STATE_JSON}
 
-    New Page    ${URL}
+    New Page    ${URL}dashboard
 
-    Wait For Load State
-    ...    networkidle
+    Wait For Elements State
+    ...    ${MENU_PEDIDOS}
+    ...    visible
+    ...    30s
 
     Aguardar UI Livre
 
@@ -39,3 +42,7 @@ Usuario Esta Logado
     Should Not Contain
     ...    ${url}
     ...    login
+
+    Should Contain
+    ...    ${url}
+    ...    dashboard
