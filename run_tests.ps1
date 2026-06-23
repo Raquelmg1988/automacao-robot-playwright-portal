@@ -4,8 +4,9 @@ Write-Host "Executando testes..."
 $AUTH_STATE = Join-Path $PSScriptRoot "auth_state.json"
 
 if (!(Test-Path $AUTH_STATE)) {
-    Write-Host "⚠️  auth_state.json nao encontrado. Execute o teste de geracao de sessao antes." -ForegroundColor Yellow
-    Write-Host "    robot -d results tests/tests_gerar_sessao.robot" -ForegroundColor Cyan
+    Write-Host "⚠️  auth_state.json nao encontrado. Gere a sessao via API antes (bypass de MFA):" -ForegroundColor Yellow
+    Write-Host "    python gerar_auth.py" -ForegroundColor Cyan
+    Write-Host "    (defina antes EMAIL_CLIENTE, SENHA_CLIENTE e QA_API_KEY no ambiente)" -ForegroundColor Cyan
     exit 1
 }
 

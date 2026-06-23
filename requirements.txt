@@ -13,3 +13,6 @@ playwright==1.44.0
 
 # Dados Fake
 faker==40.23.0
+
+# HTTP (gerar_auth.py: gera a sessao via API)
+requests==2.32.3

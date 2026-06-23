@@ -9,6 +9,10 @@ Resource    ../../resources/locators/locators.robot
 *** Test Cases ***
 
 Gerar Sessao Logada
+    [Documentation]    Geracao manual de sessao (login + MFA no navegador).
+    ...    Fluxo legado: prefira "python gerar_auth.py", que gera a sessao via API
+    ...    sem MFA manual. Marcado como manual para nao rodar em execucoes automaticas.
+    [Tags]    manual
 
     New Browser    chromium    headless=False
 

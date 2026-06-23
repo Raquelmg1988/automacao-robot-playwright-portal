@@ -12,12 +12,12 @@ robot_tests:
     - pip install -r requirements.txt
     - rfbrowser init
     - mkdir -p results allure-results tests/auth
-    # Copia a sessão direto para o local consumido pelas Keywords
-    - cp "$AUTH_STATE_JSON" ./tests/auth/auth_state.json
+    - python gerar_auth.py
+    - cp auth_state.json ./tests/auth/auth_state.json
 
   script:
     - echo "=== PASSO 1: VALIDANDO SESSÃO AUTENTICADA (MFA) ==="
-    - robot --listener allure_robotframework:allure-results -d results/auth tests/auth/
+    - robot --listener allure_robotframework:allure-results -d results/auth --exclude manual tests/auth/
 
     - echo "=== PASSO 2: TESTES DE CADASTRO E SENHA (CENÁRIO DESLOGADO) ==="
     # Executa os testes de cadastro de novos clientes e validações de campos
@@ -35,8 +35,8 @@ robot_tests:
     - allure generate allure-results -o allure-report --clean
 
   after_script:
-    # Garante a segurança apagando o arquivo no diretório correto
-    - rm -f ./tests/auth/auth_state.json
+    # Garante a segurança apagando a sessão (token) gerada durante o job
+    - rm -f ./tests/auth/auth_state.json auth_state.json
 
   artifacts:
     when: always
