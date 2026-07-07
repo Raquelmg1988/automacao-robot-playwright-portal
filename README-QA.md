@@ -15,6 +15,10 @@ e as keywords do Robot (`Abrir Sessao Logada`) reutilizam essa sessão.
 
 ## 1. Configurar as variáveis de ambiente
 
+> 💡 Antes de começar, duplique o arquivo `resources/variables_local.robot.example`, 
+> renomeie a cópia para `variables_local.robot` e preencha com as variáveis do seu ambiente.
+
+
 Use uma conta **cliente** de teste. O e-mail **não** pode ser `@grupoelfa.com.br` nem
 `@grupoelfa.onmicrosoft.com` — esses domínios são forçados ao login Microsoft e **não**
 passam pelo bypass.
