@@ -1,0 +1,10 @@
+*** Variables ***
+
+\         https://grupoelfa.com.br
+
+# Dados de autenticação local (Preencha com seus dados ficticios ou de teste)
+\    seu_email_aqui@teste.com
+\    sua_senha_aqui
+
+\    (11) 99999-9999
+\   00.000.000/0001-00

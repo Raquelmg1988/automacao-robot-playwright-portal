@@ -1,0 +1,18 @@
+robotframework==7.0.1
+robotframework-browser==18.3.0
+allure-robotframework==2.13.5
+
+# Core
+robotframework-pythonlibcore==4.4.1
+
+# Debug
+robotframework-stacktrace==0.4.1
+
+# Playwright
+playwright==1.44.0
+
+# Dados Fake
+faker==40.23.0
+
+# HTTP (gerar_auth.py: gera a sessao via API)
+requests==2.32.3
